@@ -50,14 +50,14 @@ func run() int {
 	flag.BoolVar(&showVersion, "v", false, "show version")
 	flag.Parse()
 
-	if flag.NArg() == 0 {
-		flag.Usage()
-		os.Exit(2)
-	}
-
 	if showVersion {
 		fmt.Println(version)
 		os.Exit(0)
+	}
+
+	if flag.NArg() == 0 {
+		flag.Usage()
+		os.Exit(2)
 	}
 
 	store, err := leveldb.OpenFile(f, nil)
