@@ -121,6 +121,8 @@ func run() int {
 		}
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "%v: %v\n", os.Args[0], err)
+		} else if verbose {
+			fmt.Printf("[set] [%s] %s\n", count(st.Retry), string(bk))
 		}
 	}
 
