@@ -101,13 +101,16 @@ func run() int {
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	err = cmd.Run()
 
+	err = cmd.Run()
 	code := cmd.ProcessState.ExitCode()
-	if code == 0 {
-		println(string(bk))
+	if code == 0 && err == nil {
+		if verbose {
+			fmt.Printf("[done] %s\n", string(bk))
+		}
 		if err = store.Delete(bk, &opt.WriteOptions{Sync: true}); err != nil {
 			fmt.Fprintf(os.Stderr, "%v: %v\n", os.Args[0], err)
+			return -2
 		}
 	} else {
 		st.Retry++
@@ -118,8 +121,11 @@ func run() int {
 		}
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "%v: %v\n", os.Args[0], err)
+		} else if verbose {
+			fmt.Printf("[set] [%s] %s\n", count(st.Retry), string(bk))
 		}
 	}
+
 	return code
 }
 
